@@ -108516,7 +108516,7 @@ ws(){var s=0,r=A.q(t.y),q,p=2,o,n,m,l,k
 var $async$ws=A.r(function(a,b){if(a===1){o=b
 s=p}while(true)switch(s){case 0:p=4
 s=7
-return A.m(A.bpX(A.dY("https://www.google.com",0,null)),$async$ws)
+return A.m(A.bpX(A.dY("http://worldtimeapi.org/api/timezone/UTC",0,null)),$async$ws)
 case 7:n=b
 m=n.b
 q=m===200
