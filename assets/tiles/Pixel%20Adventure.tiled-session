@@ -1,0 +1,58 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level-02.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "Pixel Adventure.tsx": {
+            "scaleInDock": 1
+        },
+        "level-01.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 1.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 287.3333333333333,
+                "y": 198.66666666666669
+            }
+        },
+        "level-02.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 1.62390625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 317.13653420571535,
+                "y": 182.2765322813432
+            }
+        }
+    },
+    "last.imagePath": "C:/Users/Niassamond/Desktop/pixel_adventure/assets/images/Terrain",
+    "map.height": 23,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 40,
+    "openFiles": [
+        "level-01.tmx",
+        "level-02.tmx"
+    ],
+    "project": "Pixel Adventure.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "level-01.tmx",
+        "level-02.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
