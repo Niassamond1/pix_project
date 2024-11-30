@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
+import 'package:flutter_application_1/services/loading_service.dart';
 
 class MachineTable extends StatefulWidget {
   const MachineTable({super.key});
@@ -18,41 +19,39 @@ class _MachineTableState extends State<MachineTable> {
 
   @override
   void initState() {
-    _fetchMachines();
-    _fetchUsers();
+    _fetchData();
     super.initState();
   }
 
-  void _fetchUsers() {
-    _databaseRef.onValue.listen((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+  void _fetchData() async {
+    // Fetch Users
+    final userData = await _databaseRef.onValue.first;
+    final users = (userData.snapshot.value as Map<dynamic, dynamic>?)
+            ?.entries
+            .map((entry) {
+          final key = entry.key as String;
+          final value = Map<String, dynamic>.from(entry.value as Map);
+          return {'id': key, ...value};
+        }).toList() ??
+        [];
 
-      if (data != null) {
-        setState(() {
-          _users = data.entries.map((entry) {
-            final key = entry.key as String;
-            final value = Map<String, dynamic>.from(entry.value as Map);
-            return {'id': key, ...value};
-          }).toList();
-        });
-      }
-    });
-  }
+    // Fetch Machines
+    final machineData = await _databaseMachineRef.onValue.first;
+    final machines = (machineData.snapshot.value as Map<dynamic, dynamic>?)
+            ?.entries
+            .map((entry) {
+          final key = entry.key as String;
+          final value = Map<String, dynamic>.from(entry.value as Map);
+          return {'id': key, ...value};
+        }).toList() ??
+        [];
 
-  void _fetchMachines() {
-    _databaseMachineRef.onValue.listen((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
-
-      if (data != null) {
-        setState(() {
-          _machines = data.entries.map((entry) {
-            final key = entry.key as String;
-            final value = Map<String, dynamic>.from(entry.value as Map);
-            return {'id': key, ...value};
-          }).toList();
-        });
-      }
-    });
+    if (mounted) {
+      setState(() {
+        _users = users;
+        _machines = machines;
+      });
+    }
   }
 
   Widget selectUsers(String machineId) {
@@ -92,10 +91,10 @@ class _MachineTableState extends State<MachineTable> {
                   onPressed: () async {
                     try {
                       // Debugging logs to confirm variable states
-                      print("User ID: ${users['id']}");
-                      print("Machines: ${users['machines']}");
-                      print("Machine ID: $machineId");
-
+                      // print("User ID: ${users['id']}");
+                      // print("Machines: ${users['machines']}");
+                      // print("Machine ID: $machineId");
+                      showLoader();
                       Map<Object?, Object?> machines = users['machines'] ?? {};
 
                       if (machines.containsKey(machineId)) {
@@ -115,8 +114,8 @@ class _MachineTableState extends State<MachineTable> {
                             .update({'machine': machineId});
                         print("Machine added successfully.");
                       }
-
-                      Navigator.pop(context);
+                      hideLoader();
+                      //Navigator.pop(context);
                     } catch (e) {
                       // Log the error and show user-friendly feedback
                       print("Error: $e");
@@ -204,6 +203,8 @@ class _MachineTableState extends State<MachineTable> {
   }
 
   void _showModal(BuildContext context, String title, Widget childs) {
+    _fetchData();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {

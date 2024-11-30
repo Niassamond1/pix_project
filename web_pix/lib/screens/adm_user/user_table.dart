@@ -19,7 +19,6 @@ class _UserTableState extends State<UserTable> {
   @override
   void initState() {
     super.initState();
-    // Inicialização do stream
     _userStream = _databaseRef.onValue.listen((event) {
       if (mounted) {
         setState(() {
@@ -115,10 +114,9 @@ class _UserTableState extends State<UserTable> {
 
   Future<void> ResetPassword(String email) async {
     try {
-      await _databaseRef.child(email).update({
-        'password': '12345678',
-        'new': true
-      });
+      await _databaseRef
+          .child(email)
+          .update({'password': '12345678', 'new': true});
     } catch (e) {
       print(e);
     }

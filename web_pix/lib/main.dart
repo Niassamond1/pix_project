@@ -7,13 +7,15 @@ import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/normal_user/normal_user_screen.dart';
 import 'package:flutter_application_1/screens/password_screen.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   // Garante que os widgets Flutter sejam inicializados antes de qualquer operação assíncrona
   WidgetsFlutterBinding.ensureInitialized();
 
   // Inicializa o Firebase com as configurações específicas para a plataforma
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,  // Usa as opções geradas no firebase_options.dart
+    options: DefaultFirebaseOptions
+        .currentPlatform, // Usa as opções geradas no firebase_options.dart
   );
   runApp(WebPix());
 }
@@ -24,9 +26,10 @@ class WebPix extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       theme: ThemeData(
         scrollbarTheme: ScrollbarThemeData(
-          thumbColor: WidgetStateProperty.all(textcolor), 
+          thumbColor: WidgetStateProperty.all(textcolor),
         ),
       ),
       initialRoute: LoginScreen.id,
