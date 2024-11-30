@@ -23,13 +23,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
 @override
 void didChangeDependencies() {
   super.didChangeDependencies();
-  // Verifique se o argumento é um Map
   final arguments = ModalRoute.of(context)?.settings.arguments as Map?;
   if (arguments != null) {
     email = arguments['email'] as String? ?? '';
     auth = arguments['auth'] as bool? ?? false;
   }
-  print('Email do usuário: $email');
 }
 
   void Auth () {

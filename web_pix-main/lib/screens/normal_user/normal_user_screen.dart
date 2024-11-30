@@ -14,7 +14,7 @@ class NormalUserScreen extends StatefulWidget {
 class _NormalUserScreenState extends State<NormalUserScreen> {
   bool auth = false;
   String email = '';
-  List<Map<String, dynamic>> _users = [];
+  Map<String, dynamic>? _user = null;
   List<Map<String, dynamic>> _machines = [];
   final DatabaseReference _databaseMachineRef =
       FirebaseDatabase.instance.ref('machines');
@@ -29,7 +29,6 @@ class _NormalUserScreenState extends State<NormalUserScreen> {
       email = arguments['email'] as String? ?? '';
       auth = arguments['auth'] as bool? ?? false;
     }
-    print('Email do usuário: $email');
   }
 
   void Auth() {
@@ -43,24 +42,28 @@ class _NormalUserScreenState extends State<NormalUserScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Auth();
     });
-    _fetchMachines();
-    _fetchUsers();
+    _fetchUser();
+
     super.initState();
   }
 
-  void _fetchUsers() {
+  void _fetchUser() {
     _databaseRef.onValue.listen((event) {
       final data = event.snapshot.value as Map<dynamic, dynamic>?;
 
       if (data != null) {
         setState(() {
-          _users = data.entries.map((entry) {
+          List<Map<String, dynamic>> users = data.entries.map((entry) {
             final key = entry.key as String;
             final value = Map<String, dynamic>.from(entry.value as Map);
             return {'id': key, ...value};
           }).toList();
-          print(_users);
-          print(email);
+
+          _user = users.firstWhere(
+            (user) => user['id'] == email,
+            orElse: () => {},
+          );
+          _fetchMachines();
         });
       }
     });
@@ -72,11 +75,16 @@ class _NormalUserScreenState extends State<NormalUserScreen> {
 
       if (data != null) {
         setState(() {
-          _machines = data.entries.map((entry) {
+          _machines = data.entries.where((entry) {
+            final machineId = entry.key as String;
+            final userMachines = _user!['machines'];
+            return userMachines != null && userMachines.containsKey(machineId);
+          }).map((entry) {
             final key = entry.key as String;
             final value = Map<String, dynamic>.from(entry.value as Map);
             return {'id': key, ...value};
           }).toList();
+
         });
       }
     });

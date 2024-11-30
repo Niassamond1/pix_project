@@ -29,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
       if (snapshot.exists) {
         final data = Map<String, dynamic>.from(snapshot.value as Map); // Dados do usuário
         if (data["password"] == password && data["new"] == false) {
-          print('ok');
           data["type"] == "adm"
            ? Navigator.pushNamed(context, AdmUserScreen.id, arguments: auth)
            : Navigator.pushNamed(context, NormalUserScreen.id, arguments: {'email': email, 'auth': auth});
