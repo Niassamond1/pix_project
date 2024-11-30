@@ -88,42 +88,52 @@ class _MachineTableState extends State<MachineTable> {
                     ),
                   ),
                 ),
-                DataCell(
-                  ElevatedButton(
-                    onPressed: () async {
+                DataCell(ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      // Debugging logs to confirm variable states
+                      print("User ID: ${users['id']}");
+                      print("Machines: ${users['machines']}");
+                      print("Machine ID: $machineId");
+
                       Map<Object?, Object?> machines = users['machines'] ?? {};
 
                       if (machines.containsKey(machineId)) {
-                        try {
-                          await _databaseRef
-                              .child(users['id'])
-                              .child('machines')
-                              .child(machineId)
-                              .remove();
-                        } catch (e) {
-                          print(e);
-                        }
+                        print("Removing machine with ID: $machineId");
+                        await _databaseRef
+                            .child(users['id'])
+                            .child('machines')
+                            .child(machineId)
+                            .remove();
+                        print("Machine removed successfully.");
                       } else {
-                        try {
-                          await _databaseRef
-                              .child(users['id'])
-                              .child('machines')
-                              .child(machineId)
-                              .update({'machine': machineId});
-                        } catch (e) {
-                          print(e);
-                        }
+                        print("Adding machine with ID: $machineId");
+                        await _databaseRef
+                            .child(users['id'])
+                            .child('machines')
+                            .child(machineId)
+                            .update({'machine': machineId});
+                        print("Machine added successfully.");
                       }
+
                       Navigator.pop(context);
-                    },
-                    child: Text(
-                      machines.containsKey(machineId)
-                          ? 'Desvincular'
-                          : 'Vincular',
-                      style: stylebutton,
-                    ),
+                    } catch (e) {
+                      // Log the error and show user-friendly feedback
+                      print("Error: $e");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content:
+                                Text("An error occurred. Please try again.")),
+                      );
+                    }
+                  },
+                  child: Text(
+                    users['machines']?.containsKey(machineId) == true
+                        ? 'Desvincular'
+                        : 'Vincular',
+                    style: stylebutton,
                   ),
-                ),
+                )),
               ],
             );
           },
@@ -266,8 +276,7 @@ class _MachineTableState extends State<MachineTable> {
                 ),
                 DataCell(
                   Text(
-                    DateTime.fromMillisecondsSinceEpoch(
-                            machine['lastUpdate'])
+                    DateTime.fromMillisecondsSinceEpoch(machine['lastUpdate'])
                         .toString(),
                     style: styleText,
                   ),
