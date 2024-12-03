@@ -6,6 +6,7 @@ import 'package:flutter_application_1/screens/adm_user/adm_user_screen.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/screens/normal_user/normal_user_screen.dart';
 import 'package:flutter_application_1/screens/password_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
@@ -33,6 +34,16 @@ class WebPix extends StatelessWidget {
         ),
       ),
       initialRoute: LoginScreen.id,
+      supportedLocales: [
+        Locale('pt', 'BR'), // Português do Brasil
+      ],
+      locale: Locale('pt', 'BR'),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate, // Localizações do Material
+        GlobalWidgetsLocalizations.delegate, // Localizações do Widgets
+        GlobalCupertinoLocalizations
+            .delegate, // Localizações do Cupertino (iOS)
+      ],
       routes: {
         LoginScreen.id: (context) => LoginScreen(),
         AdmUserScreen.id: (context) => AdmUserScreen(),

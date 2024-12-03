@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/components/machine_report.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/services/loading_service.dart';
 
@@ -141,66 +142,196 @@ class _MachineTableState extends State<MachineTable> {
     );
   }
 
-  Widget machineReport(String machineId) {
-    final machine = _machines.firstWhere(
-      (m) => m['id'] == machineId,
-    );
+  // Widget machineReport(String machineId) {
+  //   final machine = _machines.firstWhere(
+  //     (m) => m['id'] == machineId,
+  //   );
 
-    final payments = machine['payments'];
-    final paymentsList = (payments as Map).values.toList();
+  //   final payments = machine['payments'];
+  //   var paymentsList = [];
+  //   if (payments is List) {
+  //     paymentsList = payments.whereType<Map>().toList();
+  //   } else {
+  //     paymentsList = (payments as Map).values.toList();
+  //   }
+  //   paymentsList.sort((b, a) => a['date'].compareTo(b['date']));
 
-    return SingleChildScrollView(
-      child: DataTable(
-        columns: [
-          DataColumn(
-            label: Text(
-              'Data',
-              style: TextStyle(color: textcolor),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'Tipo de pagamento',
-              style: TextStyle(color: textcolor),
-            ),
-          ),
-          DataColumn(
-            label: Text(
-              'Valor',
-              style: TextStyle(color: textcolor),
-            ),
-          ),
-        ],
-        rows: paymentsList.map<DataRow>(
-          (payment) {
-            return DataRow(
-              cells: [
-                DataCell(
-                  Text(
-                    DateTime.fromMillisecondsSinceEpoch(payment['date'])
-                        .toString(),
-                    style: styleText,
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    payment['pay_type'],
-                    style: styleText,
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    payment['value'],
-                    style: styleText,
-                  ),
-                ),
-              ],
-            );
-          },
-        ).toList(),
-      ),
-    );
-  }
+  //   return SingleChildScrollView(
+  //     child: DataTable(
+  //       columns: [
+  //         DataColumn(
+  //           label: Text(
+  //             'Data',
+  //             style: TextStyle(color: textcolor),
+  //           ),
+  //         ),
+  //         DataColumn(
+  //           label: Text(
+  //             'Tipo de pagamento',
+  //             style: TextStyle(color: textcolor),
+  //           ),
+  //         ),
+  //         DataColumn(
+  //           label: Text(
+  //             'Valor',
+  //             style: TextStyle(color: textcolor),
+  //           ),
+  //         ),
+  //       ],
+  //       rows: paymentsList.map<DataRow>(
+  //         (payment) {
+  //           return DataRow(
+  //             cells: [
+  //               DataCell(
+  //                 Text(
+  //                   DateTime.fromMillisecondsSinceEpoch(payment['date'])
+  //                       .toString(),
+  //                   style: styleText,
+  //                 ),
+  //               ),
+  //               DataCell(
+  //                 Text(
+  //                   payment['pay_type'],
+  //                   style: styleText,
+  //                 ),
+  //               ),
+  //               DataCell(
+  //                 Text(
+  //                   payment['value'],
+  //                   style: styleText,
+  //                 ),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       ).toList(),
+  //     ),
+  //   );
+  // }
+
+  // Widget machineReport(String machineId) {
+  //   final machine = _machines.firstWhere(
+  //     (m) => m['id'] == machineId,
+  //   );
+
+  //   final payments = machine['payments'];
+  //   List<Map<String, dynamic>> paymentsList = [];
+
+  //   if (payments is List) {
+  //     paymentsList = payments
+  //         .map((payment) {
+  //           if (payment is Map) {
+  //             return Map<String, dynamic>.from(payment);
+  //           }
+  //           return null;
+  //         })
+  //         .whereType<Map<String, dynamic>>()
+  //         .toList();
+  //   } else if (payments is Map) {
+  //     paymentsList = payments.values.cast<Map<String, dynamic>>().toList();
+  //   }
+
+  //   paymentsList.sort((b, a) => a['date'].compareTo(b['date']));
+
+  //   DateTime? startDate;
+  //   DateTime? endDate;
+  //   List<Map<String, dynamic>> filteredPaymentsList =
+  //       paymentsList; // Lista filtrada
+
+  //   // Função de filtragem de pagamentos
+  //   void filterPayments(DateTime? start, DateTime? end) {
+  //     setState(() {
+  //       startDate = start;
+  //       endDate = end;
+  //       filteredPaymentsList = paymentsList.where((payment) {
+  //         final paymentDate =
+  //             DateTime.fromMillisecondsSinceEpoch(payment['date']);
+  //         return paymentDate
+  //                 .isAfter(startDate!.subtract(const Duration(days: 1))) &&
+  //             paymentDate.isBefore(endDate!.add(const Duration(days: 1)));
+  //       }).toList();
+  //     });
+  //   }
+
+  //   return StatefulBuilder(
+  //     builder: (context, setState) {
+  //       return Column(
+  //         children: [
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               final dateRange = await showDateRangePicker(
+  //                 context: context,
+  //                 firstDate: DateTime(2000),
+  //                 lastDate: DateTime.now(),
+  //                 initialDateRange: startDate != null && endDate != null
+  //                     ? DateTimeRange(start: startDate!, end: endDate!)
+  //                     : null,
+  //               );
+  //               if (dateRange != null) {
+  //                 filterPayments(
+  //                     dateRange.start, dateRange.end); // Atualiza as datas
+  //               }
+  //             },
+  //             child: const Text("Filtrar por Data"),
+  //           ),
+  //           // Exibindo a DataTable com os pagamentos filtrados
+  //           SingleChildScrollView(
+  //             child: DataTable(
+  //               columns: [
+  //                 DataColumn(
+  //                   label: Text(
+  //                     'Data',
+  //                     style: TextStyle(color: textcolor),
+  //                   ),
+  //                 ),
+  //                 DataColumn(
+  //                   label: Text(
+  //                     'Tipo de pagamento',
+  //                     style: TextStyle(color: textcolor),
+  //                   ),
+  //                 ),
+  //                 DataColumn(
+  //                   label: Text(
+  //                     'Valor',
+  //                     style: TextStyle(color: textcolor),
+  //                   ),
+  //                 ),
+  //               ],
+  //               rows: filteredPaymentsList.map<DataRow>(
+  //                 // Usando a lista filtrada
+  //                 (payment) {
+  //                   return DataRow(
+  //                     cells: [
+  //                       DataCell(
+  //                         Text(
+  //                           DateTime.fromMillisecondsSinceEpoch(payment['date'])
+  //                               .toString(),
+  //                           style: styleText,
+  //                         ),
+  //                       ),
+  //                       DataCell(
+  //                         Text(
+  //                           payment['pay_type'],
+  //                           style: styleText,
+  //                         ),
+  //                       ),
+  //                       DataCell(
+  //                         Text(
+  //                           payment['value'].toString(),
+  //                           style: styleText,
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   );
+  //                 },
+  //               ).toList(),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void _showModal(BuildContext context, String title, Widget childs) {
     _fetchData();
@@ -288,9 +419,8 @@ class _MachineTableState extends State<MachineTable> {
                       _showModal(
                         context,
                         'Informação de máquina',
-                        machineReport(
-                          machine['id'],
-                        ),
+                        MachineReport(
+                            machineId: machine['id'], machines: _machines),
                       );
                     },
                     child: Text(

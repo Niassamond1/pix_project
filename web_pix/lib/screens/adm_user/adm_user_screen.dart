@@ -49,7 +49,7 @@ class _AdmUserScreenState extends State<AdmUserScreen> {
       showLoader();
       _userStream = databaseRef.onValue.listen((event) {
         print("Stream iniciado");
-        Future.delayed(Duration(seconds: 2), () {
+        Future.delayed(Duration(milliseconds: 100), () {
           hideLoader();
         });
       });
